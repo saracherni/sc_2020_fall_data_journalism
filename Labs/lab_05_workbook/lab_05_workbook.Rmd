@@ -82,7 +82,7 @@ covid_county <- read_csv("data/covid_county_2020_08_30.csv")
 
 ```{r}
 
-glimpse()
+glimpse(covid_county)
 
 ```
 
@@ -142,7 +142,7 @@ us_total_covid_cases <- covid_county %>%
 us_total_covid_cases
 
 # Q: How many total COVID cases were there in the U.S. on August 30?
-# A: (Put the answer here)
+# A: 5956023
 
 ```
 
@@ -165,13 +165,13 @@ This time, you'll need to edit the code I've written in order to produce the cor
   # If we don't fix it and run the code, it will look like the answer is 0 deaths, which isn't correct.
 
 us_total_covid_deaths <- covid_county %>%
-  summarise(total_deaths = sum())
+  summarise(total_deaths = sum(deaths))
 
 # This code displays the results of the code we created above
 us_total_covid_deaths
 
 # Q: How many total COVID deaths were there in the U.S. on August 30?
-# A: (Put the answer here)
+# A: 182045
 
 ```
 
@@ -213,7 +213,7 @@ us_county_average_covid_cases <- covid_county %>%
 us_county_average_covid_cases
 
 # Q: How many cases did the average U.S. county have on August 30?
-# A: (Put the answer here)
+# A: 1907.148
 
 ```
 
@@ -229,9 +229,14 @@ Q: How many **deaths** did the average U.S. county have on August 30?
 
 # Write the code necessary to display us_county_average_covid_deaths below this codeblock
 
+us_county_average_covid_deaths <- covid_county %>%
+  summarise(deaths_in_average_county = mean(deaths))
+
+
+us_county_average_covid_deaths
 
 # Q: How many **deaths** did the average U.S. county have on August 30?
-# A: (Put the answer here)
+# A: 58.29
 
 ```
 
@@ -303,7 +308,7 @@ least_covid_cases_state
 
 # Write the answer in a comment
 # Q: Which state had the fewest total covid cases on August 30? How many cases?
-# A:
+# A:Vermont 
 ```
 Let's answer another, similar question. 
  
@@ -330,8 +335,8 @@ Edit the code as instructed, read the comments, and edit the comment at the end 
 # Then, it sorts the newly created dataframe from lowest to highest on total_deaths.
 # That's what it's supposed to do..but it has two errors you need to fix, detailed above.
 least_covid_deaths_state <- covid_county %>%
-  group_by() %>%
-  summarise(total_deaths = ) %>%
+  group_by(state) %>%
+  summarise(total_deaths =sum(deaths)) %>%
   arrange(total_deaths)
 
 # Display below
@@ -339,7 +344,7 @@ least_covid_deaths_state
 
 # Write the answer in a comment
 # Q: Which state had the fewest total covid deaths August 30? How many cases?
-# A:d
+# A:Alaska
 
 ```
 
@@ -381,7 +386,7 @@ state_cases_in_average_county
 
 # Write the answer in a comment
 # Q: What was the average number of cases per county in each state? Which state had the lowest average?
-# A:
+# A:Vermont had the lowest average 
 
 
 ```
@@ -399,8 +404,15 @@ Q: What was the average number of deaths per county in each state? Which state h
 # Write the code necessary to display state_deaths_in_average_county below this codeblock
 
 
+state_deaths_in_average_county <- covid_county %>%
+  group_by(state) %>%
+  summarise(deaths_in_average_county = mean(deaths)) %>%
+  arrange(desc(deaths_in_average_county))
+
+state_deaths_in_average_county
+
 # Q:  Which state had the highest average deaths per county?
-# A: (Put the answer here)
+# A: New Jersey
 
 
 ```
@@ -458,7 +470,7 @@ counties_per_state
 
 # Write the answer in a comment
 # Q: Which state has the most counties in our data? How many?
-# A:
+# A:Texas
 ```
 ## Putting it all together
 
@@ -476,14 +488,36 @@ To finish the lab, you have three exercises to complete.
 
 # Write the name of the object you just created below so it displays below in the markdown document
 
+number_of_counties<- covid_county %>%
+  group_by(state) %>%
+  summarise(total_counties =n()) %>%
+  arrange(total_counties)
+
+number_of_counties
+
 # Q: which state has the smallest number of counties? 
-# A: write the answer here
+# A: Deleware, 3 
 
 ```
 
 ### Exercise 2
 
 **Task (Create a Codeblock, Write and Run Code): ** Develop your own question, and write code to answer it below.  It can be anything you like, but be sure to use summarise() in answering your question.
+
+```{r}
+#Q: Which state had the lowest number of deaths on average per county? What is the average?
+#A: Alaska, 1.307
+
+state_deaths_per_county <- covid_county %>%
+  group_by(state) %>%
+  summarise(deaths_in_average_couny = mean(deaths)) %>%
+  arrange(deaths_in_average_couny)
+
+state_deaths_per_county
+
+
+
+```
 
 ## You're done
 
