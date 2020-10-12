@@ -1,0 +1,118 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+# Load the tidyverse
+library(tidyverse)
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+```{r}
+# Read in the data
+
+allegations_NYPD <- read_csv("data/data/allegations_202007271729.csv")
+
+allegations_NYPD
+```
+
+#Question 1: The allegations against McCormack read in some ways like those against many other cops in the NYPD: that he was destructive in searching a home or overly physical with someone on the street. How often did Black and Latino men accuse McCormack of invasive, humiliating searches?
+
+#Answer: Latino men accused McCormack of ivasive/humilating searches, which includes: frisk & search, frisk, word, threat of force, gun pointed, phsyical force, strip-searched, 11 times. Black men accused McCormack of ivasive/humilating searches, which includes:frisk and search, gun-pointed, phsycial force, threat of force, word, strip-searched, pepper spray,17 times 
+
+#Note: What counts as invasive/humilating?
+```{r}
+Mccormack_allegations_NYPD <- allegations_NYPD %>%
+  select(last_name, complainant_ethnicity, allegation) %>%
+  filter(last_name == "Mccormack") %>%
+  arrange(complainant_ethnicity)
+
+Mccormack_allegations_NYPD
+
+Mccormack_allegations_NYPD <- allegations_NYPD %>%
+  select(last_name, complainant_ethnicity, allegation) %>%
+  filter(last_name == "Mccormack") %>%
+  filter(complainant_ethnicity == "Black") %>%
+  arrange(complainant_ethnicity)
+
+  Mccormack_allegations_NYPD
+  
+  Mccormack_allegations_NYPD <- allegations_NYPD %>%
+  select(last_name, complainant_ethnicity, allegation) %>%
+  filter(last_name == "Mccormack") %>%
+  filter(complainant_ethnicity == "Hispanic") %>%
+  arrange(complainant_ethnicity)
+
+  Mccormack_allegations_NYPD
+```
+
+#Question 2: Of at least 77 allegations made against him [McCormack] in 26 separate CCRB complaints, 29 were unsubstantiated; five were “unfounded,” meaning investigators concluded the incident never took place; and 27 were “exonerated,” meaning the conduct fell within patrol guidelines. 
+
+#Answer: 36 unsubstantiated, 31 exonerated, 0 unfounded (85 complaints total against Mccormack)
+
+```{r}
+Mccormack_board_disposition_NYPD <- allegations_NYPD %>%
+  select(last_name, allegation, board_disposition) %>%
+  filter(last_name == "Mccormack") %>%
+  filter(board_disposition == "Unsubstantiated") %>%
+  arrange(board_disposition)
+  
+
+Mccormack_board_disposition_NYPD
+
+Mccormack_board_disposition_NYPD <- allegations_NYPD %>%
+  select(last_name, allegation, board_disposition) %>%
+  filter(last_name == "Mccormack") %>%
+  filter(board_disposition == "Exonerated") %>%
+  arrange(board_disposition)
+
+Mccormack_board_disposition_NYPD
+
+Mccormack_board_disposition_NYPD <- allegations_NYPD %>%
+  select(last_name, allegation, board_disposition) %>%
+  filter(last_name == "Mccormack") %>%
+  filter(board_disposition == "Unfounded") %>%
+  arrange(board_disposition)
+
+Mccormack_board_disposition_NYPD
+```
+#Note: Why are there zero rows for unfounded??? why don't the numbers match? How do I filter just the 77 allegations
+
+#Question 3: Eighty-six of the roughly 420 officers in the department who currently hold a rank above captain — running precincts and other large commands and overseeing hundreds of officers — have tallied at least one misconduct allegation that was substantiated by the CCRB, meaning that investigators amassed enough evidence of offenses, ranging from bad language to pistol whippings, to say that they happened and broke patrol guidelines. The most common involved improper property entries and searches.
+
+#Note: Do i need to mutate to create a new column of above captain rank (chiefs and above, deputy inspector and inspector)
+
+```{r}
+high_ranking_misconduct <- allegations_NYPD %>%
+  select(last_name, rank_now, allegation, board_disposition) %>%
+  filter(rank_now == "Inspector") %>%
+  filter(rank_now == "Deputy Inspector") %>%
+  filter(rank_now == "Chiefs and above") 
+
+high_ranking_misconduct
+```
+
+# Question 4: The story focused on Christopher McCormack. Use data analysis to justify that decision. Why does he stand out as newsworthy, from all of the people they could have selected?
+
+```{r}
+
+
+```
+
+
+
+
+
+
