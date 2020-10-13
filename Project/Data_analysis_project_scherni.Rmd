@@ -32,7 +32,7 @@ allegations_NYPD
 
 #Answer: Latino men accused McCormack of ivasive/humilating searches, which includes: frisk & search, frisk, word, threat of force, gun pointed, phsyical force, strip-searched, 11 times. Black men accused McCormack of ivasive/humilating searches, which includes:frisk and search, gun-pointed, phsycial force, threat of force, word, strip-searched, pepper spray,17 times 
 
-#Note: What counts as invasive/humilating?
+#Note: What counts as invasive/humilating? try grouping, specific numbers in discussion
 ```{r}
 Mccormack_allegations_NYPD <- allegations_NYPD %>%
   select(last_name, complainant_ethnicity, allegation) %>%
@@ -41,21 +41,30 @@ Mccormack_allegations_NYPD <- allegations_NYPD %>%
 
 Mccormack_allegations_NYPD
 
-Mccormack_allegations_NYPD <- allegations_NYPD %>%
+Mccormack_allegations_Black <- allegations_NYPD %>%
   select(last_name, complainant_ethnicity, allegation) %>%
   filter(last_name == "Mccormack") %>%
   filter(complainant_ethnicity == "Black") %>%
   arrange(complainant_ethnicity)
 
-  Mccormack_allegations_NYPD
+  Mccormack_allegations_Black
   
-  Mccormack_allegations_NYPD <- allegations_NYPD %>%
+  Mccormack_allegations_Hispanic <- allegations_NYPD %>%
   select(last_name, complainant_ethnicity, allegation) %>%
   filter(last_name == "Mccormack") %>%
   filter(complainant_ethnicity == "Hispanic") %>%
   arrange(complainant_ethnicity)
 
-  Mccormack_allegations_NYPD
+  Mccormack_allegations_Hispanic
+  
+Mccormack_allegations_NYPD <- allegations_NYPD %>%
+  select(last_name, complainant_ethnicity, allegation) %>%
+  filter(last_name == "Mccormack") %>%
+  group_by(last_name, complainant_ethnicity) %>%
+  count()%>%
+  arrange(desc(n))
+
+Mccormack_allegations_NYPD
 ```
 
 #Question 2: Of at least 77 allegations made against him [McCormack] in 26 separate CCRB complaints, 29 were unsubstantiated; five were “unfounded,” meaning investigators concluded the incident never took place; and 27 were “exonerated,” meaning the conduct fell within patrol guidelines. 
@@ -63,30 +72,45 @@ Mccormack_allegations_NYPD <- allegations_NYPD %>%
 #Answer: 36 unsubstantiated, 31 exonerated, 0 unfounded (85 complaints total against Mccormack)
 
 ```{r}
-Mccormack_board_disposition_NYPD <- allegations_NYPD %>%
+Mccormack_board_disposition <- allegations_NYPD %>%
+  select(last_name, allegation, board_disposition) %>%
+  filter(last_name == "Mccormack") %>%
+  arrange(board_disposition)
+
+Mccormack_board_disposition
+
+Mccormack_board_disposition_Unsub <- allegations_NYPD %>%
   select(last_name, allegation, board_disposition) %>%
   filter(last_name == "Mccormack") %>%
   filter(board_disposition == "Unsubstantiated") %>%
+  group_by()
   arrange(board_disposition)
   
 
-Mccormack_board_disposition_NYPD
+Mccormack_board_disposition_Unsub
 
-Mccormack_board_disposition_NYPD <- allegations_NYPD %>%
+Mccormack_board_disposition_Exon <- allegations_NYPD %>%
   select(last_name, allegation, board_disposition) %>%
   filter(last_name == "Mccormack") %>%
   filter(board_disposition == "Exonerated") %>%
   arrange(board_disposition)
 
-Mccormack_board_disposition_NYPD
+Mccormack_board_disposition_Exon
 
-Mccormack_board_disposition_NYPD <- allegations_NYPD %>%
+Mccormack_board_disposition_Unfound <- allegations_NYPD %>%
   select(last_name, allegation, board_disposition) %>%
   filter(last_name == "Mccormack") %>%
   filter(board_disposition == "Unfounded") %>%
   arrange(board_disposition)
 
-Mccormack_board_disposition_NYPD
+Mccormack_board_disposition_Unfound
+
+
+disposition <- allegations_NYPD %>%
+  group_by(board_disposition) %>%
+  count()
+
+disposition
 ```
 #Note: Why are there zero rows for unfounded??? why don't the numbers match? How do I filter just the 77 allegations
 
@@ -95,13 +119,31 @@ Mccormack_board_disposition_NYPD
 #Note: Do i need to mutate to create a new column of above captain rank (chiefs and above, deputy inspector and inspector)
 
 ```{r}
-high_ranking_misconduct <- allegations_NYPD %>%
+Inspector_ranking_misconduct <- allegations_NYPD %>%
   select(last_name, rank_now, allegation, board_disposition) %>%
   filter(rank_now == "Inspector") %>%
-  filter(rank_now == "Deputy Inspector") %>%
-  filter(rank_now == "Chiefs and above") 
+  filter(board_disposition == "Substantiated (Charges)") %>%
+  arrange(last_name)
 
-high_ranking_misconduct
+
+Inspector_ranking_misconduct
+
+Dep_inspector_ranking_misconduct <- allegations_NYPD %>%
+  select(last_name, rank_now, allegation, board_disposition) %>%
+  filter(rank_now == "Deputy Inspector") %>%
+  filter(board_disposition == "Substantiated (Charges)") %>%
+  arrange(last_name)
+Dep_inspector_ranking_misconduct
+
+Chief_ranking_misconduct <- allegations_NYPD %>%
+  select(last_name, rank_now, allegation, board_disposition) %>%
+  filter(rank_now == "Chiefs and other ranks") %>%
+  filter(board_disposition == "Substantiated (Charges)") %>%
+  arrange(last_name)
+
+Chief_ranking_misconduct
+
+
 ```
 
 # Question 4: The story focused on Christopher McCormack. Use data analysis to justify that decision. Why does he stand out as newsworthy, from all of the people they could have selected?
