@@ -69,15 +69,28 @@ Mccormack_allegations_NYPD
 
 #Question 2: Of at least 77 allegations made against him [McCormack] in 26 separate CCRB complaints, 29 were unsubstantiated; five were “unfounded,” meaning investigators concluded the incident never took place; and 27 were “exonerated,” meaning the conduct fell within patrol guidelines. 
 
-#Answer: 36 unsubstantiated, 31 exonerated, 0 unfounded (85 complaints total against Mccormack)
+#Answer: 36 unsubstantiated, 31 exonerated, 0 unfounded 
+#note: group by complain id to see 26, what process did they decide to look at mccormack
 
 ```{r}
 Mccormack_board_disposition <- allegations_NYPD %>%
-  select(last_name, allegation, board_disposition) %>%
-  filter(last_name == "Mccormack") %>%
+  #select(last_name,first_name, allegation, board_disposition) %>%
+  filter(last_name == "Mccormack"& first_name == "Christophe") %>%
+   group_by(board_disposition) %>%
+   count() %>%
   arrange(board_disposition)
 
 Mccormack_board_disposition
+
+x <- allegations_NYPD %>%
+  filter(last_name == "Mccormack"& first_name == "Christophe") %>%
+  mutate(board_disposition = str_sub(board_disposition, start= 1L, end=13L)) %>%
+  group_by(complaint_id, board_disposition)%>%
+  count() %>%
+  pivot_wider(names_from = board_disposition, values_from = n)
+  
+
+x
 
 Mccormack_board_disposition_Unsub <- allegations_NYPD %>%
   select(last_name, allegation, board_disposition) %>%
@@ -116,14 +129,22 @@ disposition
 
 #Question 3: Eighty-six of the roughly 420 officers in the department who currently hold a rank above captain — running precincts and other large commands and overseeing hundreds of officers — have tallied at least one misconduct allegation that was substantiated by the CCRB, meaning that investigators amassed enough evidence of offenses, ranging from bad language to pistol whippings, to say that they happened and broke patrol guidelines. The most common involved improper property entries and searches.
 
-#Note: Do i need to mutate to create a new column of above captain rank (chiefs and above, deputy inspector and inspector)
+#Note: Able to reproduce 81, but not 86
 
 ```{r}
+
+r <- allegations_NYPD %>%
+  group_by(rank_now)%>%
+  count()
+r
 Inspector_ranking_misconduct <- allegations_NYPD %>%
-  select(last_name, rank_now, allegation, board_disposition) %>%
-  filter(rank_now == "Inspector") %>%
-  filter(board_disposition == "Substantiated (Charges)") %>%
-  arrange(last_name)
+  select(last_name, first_name, unique_mos_id, rank_now, allegation, board_disposition) %>%
+  mutate(board_disposition = str_sub(board_disposition, start= 1L, end=13L)) %>%
+  filter(rank_now == "Inspector"|rank_now=="Deputy Inspector" | rank_now=="Chiefs and other ranks") %>%
+  filter(board_disposition == "Substantiated") %>%
+  group_by(unique_mos_id) %>%
+  count()%>%
+  arrange(unique_mos_id)
 
 
 Inspector_ranking_misconduct
