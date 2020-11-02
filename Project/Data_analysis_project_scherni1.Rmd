@@ -1,0 +1,208 @@
+---
+title: "ProPublica police complaint data"
+author: "YOUR NAMES, NAME, NAME" 
+date: "10/20/2020"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    df_print: paged
+  md_document:
+    variant: markdown_github
+    toc: true
+    toc_depth: 3
+---
+
+## Introduction
+<a href="google.com">link text</a>
+Just write a paragraph where you explain the purpose of this document. REVERSE ENGINEER THE STORY. [Over a Dozen Black and Latino Men Accused a Cop of Humiliating, Invasive Strip Searches. The NYPD Kept Promoting Him.](https://www.propublica.org/article/over-a-dozen-black-and-latino-men-accused-a-cop-of-humiliating-invasive-strip-searches-the-nypd-kept-promoting-him)
+
+DATA HAS BEEN UPDATED SINCE POST RAN STORY, SO OUR FINDINGS SLIGHTLY DIFFERENT. 
+
+## Load libraries
+
+```{r}
+# Load the tidyverse
+library(tidyverse)
+```
+
+## Load and clean data
+
+DESCRIPTION OF WHAT THE DATA IS, WHERE YOU GOT IT, WHAT IT INCLUDES, INCLUDING A LIST OF WHAT EACH FIELD IS. 
+
+* first_name | character | name of officer
+
+```{r}
+# Read in the data
+
+allegations_NYPD <- read_csv("data/data/allegations_202007271729.csv")
+
+allegations_NYPD
+```
+## Analysis 
+
+### Question 1.
+
+Question 1: The allegations against McCormack read in some ways like those against many other cops in the NYPD: that he was destructive in searching a home or overly physical with someone on the street. How often did Black and Latino men accuse McCormack of invasive, humiliating searches?
+
+Answer 1: Latino men accused McCormack of ivasive/humilating searches, which includes: frisk & search, frisk, word, threat of force, gun pointed, phsyical force, strip-searched, 11 times. Black men accused McCormack of ivasive/humilating searches, which includes:frisk and search, gun-pointed, phsycial force, threat of force, word, strip-searched, pepper spray,17 times.  ANY DISCUSSION ABOUT DECISIONS YOU MADE WHILE ANALYZING THAT.  
+
+```{r}
+
+# Explain what's happening in this code block
+Mccormack_allegations_Black <- allegations_NYPD %>%
+  select(last_name, first_name, complainant_ethnicity, allegation) %>%
+  filter(last_name == "Mccormack"& first_name == "Christophe" ) %>%
+  filter(complainant_ethnicity == "Black") %>%
+  arrange(complainant_ethnicity) #%>%
+  #group_by(allegation) %>%
+  #count()
+
+  Mccormack_allegations_Black
+  
+  Mccormack_allegations_Hispanic <- allegations_NYPD %>%
+  select(last_name, first_name, complainant_ethnicity, allegation) %>%
+  filter(last_name == "Mccormack" & first_name == "Christophe") %>%
+  filter(complainant_ethnicity == "Hispanic") %>%
+  arrange(complainant_ethnicity)
+
+  Mccormack_allegations_Hispanic
+  
+Mccormack_allegations_NYPD <- allegations_NYPD %>%
+  select(last_name, complainant_ethnicity, allegation) %>%
+  filter(last_name == "Mccormack") %>%
+  group_by(last_name, complainant_ethnicity) %>%
+  count()%>%
+  arrange(desc(n))
+
+Mccormack_allegations_NYPD
+```
+### Question 2
+
+Question 2: Of at least 77 allegations made against him [McCormack] in 26 separate CCRB complaints, 29 were unsubstantiated; five were “unfounded,” meaning investigators concluded the incident never took place; and 27 were “exonerated,” meaning the conduct fell within patrol guidelines. 
+
+Answer: 27 exonerated, 29 unsubstantiated, unfounded=unknown, updated data does not match this 
+
+
+```{r}
+
+# What is happening here
+
+Mccormack_discrete_allegations <- allegations_NYPD %>%
+  select(first_name, last_name, allegation) %>%
+  filter(last_name == "Mccormack" & first_name == "Christophe") %>%
+  group_by(last_name, first_name) %>%
+  count()
+
+
+Mccormack_discrete_allegations
+  
+# What is happening here
+  
+Mccormack_discrete_complaints <- allegations_NYPD %>%
+  select(first_name, last_name, complaint_id) %>%
+  filter(last_name == "Mccormack" & first_name == "Christophe") %>%
+  group_by(complaint_id) %>%
+  count() 
+  
+Mccormack_discrete_complaints
+
+# Comments to explain what doing
+Mccormack_board_disposition <- allegations_NYPD %>%
+  select(last_name,first_name, allegation, board_disposition) %>%
+  filter(last_name == "Mccormack"& first_name == "Christophe") %>%
+   group_by(board_disposition) %>%
+   count() %>%
+  arrange(board_disposition)
+
+Mccormack_board_disposition
+
+x <- allegations_NYPD %>%
+  filter(last_name == "Mccormack"& first_name == "Christophe") %>%
+  mutate(board_disposition = str_sub(board_disposition, start= 1L, end=13L)) %>%
+  group_by(complaint_id, board_disposition)%>%
+  count() %>%
+  pivot_wider(names_from = board_disposition, values_from = n)
+ 
+
+x
+
+
+```
+### Question 3
+
+Question 3: Eighty-six of the roughly 420 officers in the department who currently hold a rank above captain — running precincts and other large commands and overseeing hundreds of officers — have tallied at least one misconduct allegation that was substantiated by the CCRB, meaning that investigators amassed enough evidence of offenses, ranging from bad language to pistol whippings, to say that they happened and broke patrol guidelines. The most common involved improper property entries and searches.
+
+#Note: Able to reproduce 81, but not 86
+
+```{r}
+
+r <- allegations_NYPD %>%
+  group_by(rank_now)%>%
+  count()
+r
+
+Above_inspector_ranking_misconduct <- allegations_NYPD %>%
+  select(last_name, first_name, unique_mos_id, shield_no, rank_now, allegation, board_disposition) %>%
+  mutate(board_disposition = str_sub(board_disposition, start= 1L, end=13L)) %>%
+  filter(rank_now == "Inspector"| rank_now == "Deputy Inspector" | rank_now=="Chiefs and other ranks") %>%
+  filter(board_disposition == "Substantiated") %>%
+  group_by(unique_mos_id) %>%
+  count() %>%
+  arrange(unique_mos_id)
+
+
+Above_inspector_ranking_misconduct 
+
+#  The most common involved improper property entries and searches.
+
+above_captain_cause <- allegations_NYPD %>%
+  select(last_name, first_name, unique_mos_id, shield_no, rank_now, allegation, board_disposition) %>%
+  mutate(board_disposition = str_sub(board_disposition, start= 1L, end=13L)) %>%
+  filter(rank_now == "Inspector"| rank_now == "Deputy Inspector" | rank_now=="Chiefs and other ranks") %>%
+  filter(board_disposition == "Substantiated") %>%
+  group_by(allegation) %>%
+  count() %>%
+  arrange(desc(n)) %>%
+  mutate(allegation = tolower(allegation)) %>%
+  mutate(allegation_category = case_when(
+    allegation == "Premises entered and/or searched" ~ "search",
+    allegation == "Word" ~ "other",
+    str_detect(allegation, "search") ~ "search",
+    # PUT IN MORE CODE TO CATEGORIZE DIFFERNT THINGS. KEEP ADDING INSIDE CASE WHEN STATEMENT
+    TRUE ~ "other"
+  ))
+
+above_captain_cause
+
+```
+### Question 4
+Question 4: The story focused on Christopher McCormack. Use data analysis to justify that decision. Why does he stand out as newsworthy, from all of the people they could have selected?
+
+```{r}
+# Has higher statistics, more allegations against him than others. 
+
+#MOS_ID | First_name | last_name | count_allegations
+#Sorted highest to lowest on count_allegations
+
+Ranked_evidence_allegations_NYPD <- allegations_NYPD %>%
+  select(first_name, last_name, unique_mos_id, allegation) %>%
+  group_by(first_name, last_name) %>%
+  count() %>%
+  arrange(desc(n))
+
+Ranked_evidence_allegations_NYPD
+
+# Amongst high ranking people, does he have a lot of allegations. 
+# Does he have a high rate of substantiated cmoplaints relative to others. 
+# Does he stand out in terms of complaints by people who are black or hispanic. 
+
+```
+
+
+
+
+
+
