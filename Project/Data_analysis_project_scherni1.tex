@@ -1,0 +1,683 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={ProPublica police complaint data},
+  pdfauthor={JUMMY OWOOKADE, SUSANNAH OUTHIER, SPENCER DOBKIN, SARA CHERNIKOFF},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{ProPublica police complaint data}
+\author{JUMMY OWOOKADE, SUSANNAH OUTHIER, SPENCER DOBKIN, SARA CHERNIKOFF}
+\date{10/20/2020}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\hypertarget{introduction}{%
+\subsection{Introduction}\label{introduction}}
+
+ProPublica story. The purpose of this document is to reverse engineer
+main findings from the ProPublica story, ``Over a Dozen Black and Latino
+Men Accused a Cop of Humiliating, Invasive Strip Searches.The NYPD Kept
+Promoting.'' Using the database of NYPD allegations from 1985 to 2020,
+the main findings of the story were reproduced through cleaning,
+analyzing and mutating the data into strings. Four findings from the
+story are presented in this notebook as questions, then answered with
+lines of R in the subsequent codeblocks. {[}Over a Dozen Black and
+Latino Men Accused a Cop of Humiliating, Invasive Strip Searches. The
+NYPD Kept Promoting Him.{]}
+
+DATA HAS BEEN UPDATED SINCE POST RAN STORY, SO OUR FINDINGS ARE SLIGHTLY
+DIFFERENT.
+
+\hypertarget{load-libraries}{%
+\subsection{Load libraries}\label{load-libraries}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Load the tidyverse}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.3.2     v purrr   0.3.4
+## v tibble  3.0.3     v dplyr   1.0.2
+## v tidyr   1.1.2     v stringr 1.4.0
+## v readr   1.3.1     v forcats 0.5.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\hypertarget{load-and-clean-data}{%
+\subsection{Load and clean data}\label{load-and-clean-data}}
+
+The data in this notebook is 35 years of NYPD complaints from New York
+City Civilian Complaint Review Board, which investigates misconduct
+claims. The complaints were made public after a New York state law
+keeping them secret was repealed, giving the data public access. The
+data includes records about closed cases for officers still on the force
+as of late June 2020 with at least one substantiated allegation.
+Information regarding specific police misconduct with Assistant Chief
+McCormack was given to ProPublica in a Freedom of Information request
+and other narrative examples came from confidential documents and
+insider interviews with NYPD. ProPublica's effort to make information on
+police infractions has allowed this data to be readily available to the
+public.
+
+Each record in the data includes: the name, shield number,rank and
+precinct of each officer (as of today and at the time of the incident);
+the time of the incident; the age, race and gender of the complainant
+and the officer; a description of the alleged misconduct; and the CCRB
+ruling
+
+In this data, CCRB rulings are characterized as either Exonerated,
+Substantiated or Unsubstantiated.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Read in data }
+\NormalTok{allegations_NYPD <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{"data/data/allegations_202007271729.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   unique_mos_id = col_double(),
+##   shield_no = col_double(),
+##   complaint_id = col_double(),
+##   month_received = col_double(),
+##   year_received = col_double(),
+##   month_closed = col_double(),
+##   year_closed = col_double(),
+##   mos_age_incident = col_double(),
+##   complainant_age_incident = col_double(),
+##   precinct = col_double()
+## )
+\end{verbatim}
+
+\begin{verbatim}
+## See spec(...) for full column specifications.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{allegations_NYPD}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 33,358 x 27
+##    unique_mos_id first_name last_name command_now shield_no complaint_id
+##            <dbl> <chr>      <chr>     <chr>           <dbl>        <dbl>
+##  1         10004 Jonathan   Ruiz      078 PCT          8409        42835
+##  2         10007 John       Sears     078 PCT          5952        24601
+##  3         10007 John       Sears     078 PCT          5952        24601
+##  4         10007 John       Sears     078 PCT          5952        26146
+##  5         10009 Noemi      Sierra    078 PCT         24058        40253
+##  6         10012 Paula      Smith     078 PCT          4021        37256
+##  7         10014 Malachy    Sullivan  078 PCT          4143        33969
+##  8         10017 Fazle      Tanim     078 PCT         15187        40070
+##  9         10017 Fazle      Tanim     078 PCT         15187        41927
+## 10         10017 Fazle      Tanim     078 PCT         15187        41927
+## # ... with 33,348 more rows, and 21 more variables: month_received <dbl>,
+## #   year_received <dbl>, month_closed <dbl>, year_closed <dbl>,
+## #   command_at_incident <chr>, rank_abbrev_incident <chr>,
+## #   rank_abbrev_now <chr>, rank_now <chr>, rank_incident <chr>,
+## #   mos_ethnicity <chr>, mos_gender <chr>, mos_age_incident <dbl>,
+## #   complainant_ethnicity <chr>, complainant_gender <chr>,
+## #   complainant_age_incident <dbl>, fado_type <chr>, allegation <chr>,
+## #   precinct <dbl>, contact_reason <chr>, outcome_description <chr>,
+## #   board_disposition <chr>
+\end{verbatim}
+
+\hypertarget{analysis}{%
+\subsection{Analysis}\label{analysis}}
+
+\hypertarget{question-1.}{%
+\subsubsection{Question 1.}\label{question-1.}}
+
+Question 1: The allegations against McCormack read in some ways like
+those against many other cops in the NYPD: that he was destructive in
+searching a home or overly physical with someone on the street. How
+often did Black and Latino men accuse McCormack of invasive, humiliating
+searches?
+
+Answer 1: Latino men accused McCormack of invasive/humiliating searches,
+which includes: frisk \& search, frisk, word, threat of force, gun
+pointed, physical force, strip-searched, 10 times. Black men accused
+McCormick of invasive/humiliating searches, which includes:frisk and
+search, gun-pointed, physical force, threat of force, word,
+strip-searched, pepper spray, 17 times.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# In this next set of codeblocks, we will be discovering how many allegations were made against McCormack of invasive and humiliating searches (frisks, frisk and search, strip searches, etc.) made by Black and Hispanic men.}
+
+\CommentTok{# We first establish the categories for the data before filtering by McCormack's name and then the complainant's gender and race. This will give us a rough count of how many complaints were made by Black men towards McCormack which is 25. However, to discover the number of complaints of invasive and humiliating searching, we conducted a manual count of the complaints that fell under "invasive and humiliating." Later on, we applied a filter to only disclose those allegations that fell under invasive and humiliating. The final number of such allegations is 17.}
+
+\NormalTok{Mccormack_allegations_Black <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(last_name, first_name, complainant_ethnicity, complainant_gender, allegation) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(last_name }\OperatorTok{==}\StringTok{ "Mccormack"}\OperatorTok{&}\StringTok{ }\NormalTok{first_name }\OperatorTok{==}\StringTok{ "Christophe"}\NormalTok{ ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(complainant_gender }\OperatorTok{==}\StringTok{ "Male"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(complainant_ethnicity }\OperatorTok{==}\StringTok{ "Black"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{filter}\NormalTok{(allegation }\OperatorTok{==}\StringTok{ "Frisk"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Frisk and/or search"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Gun Pointed"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Vehicle search"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Word"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Physical force"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Search (of person)"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Strip-searched"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Threat of arrest"} \OperatorTok{|}\StringTok{ }\NormalTok{allegation }\OperatorTok{==}\StringTok{ "Threat of force (verbal or physical)"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(allegation)}
+
+\NormalTok{Mccormack_allegations_Black}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 17 x 5
+##    last_name first_name complainant_ethni~ complainant_gend~ allegation         
+##    <chr>     <chr>      <chr>              <chr>             <chr>              
+##  1 Mccormack Christophe Black              Male              Frisk              
+##  2 Mccormack Christophe Black              Male              Frisk and/or search
+##  3 Mccormack Christophe Black              Male              Frisk and/or search
+##  4 Mccormack Christophe Black              Male              Frisk and/or search
+##  5 Mccormack Christophe Black              Male              Frisk and/or search
+##  6 Mccormack Christophe Black              Male              Frisk and/or search
+##  7 Mccormack Christophe Black              Male              Frisk and/or search
+##  8 Mccormack Christophe Black              Male              Gun Pointed        
+##  9 Mccormack Christophe Black              Male              Physical force     
+## 10 Mccormack Christophe Black              Male              Search (of person) 
+## 11 Mccormack Christophe Black              Male              Search (of person) 
+## 12 Mccormack Christophe Black              Male              Strip-searched     
+## 13 Mccormack Christophe Black              Male              Threat of arrest   
+## 14 Mccormack Christophe Black              Male              Threat of force (v~
+## 15 Mccormack Christophe Black              Male              Vehicle search     
+## 16 Mccormack Christophe Black              Male              Vehicle search     
+## 17 Mccormack Christophe Black              Male              Word
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Similar to the first codeblock, here we discover the number of complaints made against McCormack by Hispanic men by selecting the necessary categories and filtering by "McCormack, Christophe," "Male" and "Hispanic." This will give the necessary answer of the number of accusations he faced from Hispanic men. Further filtering isn't necessary because all the complaints fall under the invasive/humiliating distinction. }
+\NormalTok{  Mccormack_allegations_Hispanic <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(last_name, first_name, complainant_ethnicity, complainant_gender, allegation) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(last_name }\OperatorTok{==}\StringTok{ "Mccormack"} \OperatorTok{&}\StringTok{ }\NormalTok{first_name }\OperatorTok{==}\StringTok{ "Christophe"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{filter}\NormalTok{(complainant_gender }\OperatorTok{==}\StringTok{ "Male"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(complainant_ethnicity }\OperatorTok{==}\StringTok{ "Hispanic"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{arrange}\NormalTok{(allegation)}
+
+
+\NormalTok{  Mccormack_allegations_Hispanic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##    last_name first_name complainant_ethni~ complainant_gend~ allegation         
+##    <chr>     <chr>      <chr>              <chr>             <chr>              
+##  1 Mccormack Christophe Hispanic           Male              Frisk              
+##  2 Mccormack Christophe Hispanic           Male              Frisk              
+##  3 Mccormack Christophe Hispanic           Male              Frisk and/or search
+##  4 Mccormack Christophe Hispanic           Male              Gun Pointed        
+##  5 Mccormack Christophe Hispanic           Male              Question and/or st~
+##  6 Mccormack Christophe Hispanic           Male              Strip-searched     
+##  7 Mccormack Christophe Hispanic           Male              Threat of arrest   
+##  8 Mccormack Christophe Hispanic           Male              Threat of force (v~
+##  9 Mccormack Christophe Hispanic           Male              Threat of force (v~
+## 10 Mccormack Christophe Hispanic           Male              Word
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \CommentTok{# Finally, in this code block, utilizing the filtering options from above, we apply a count of the total number of complaints by Black, Hispanic and White men towards McCormack.}
+  
+\NormalTok{Mccormack_allegations_NYPD <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(last_name, first_name, complainant_ethnicity, complainant_gender, allegation) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(last_name }\OperatorTok{==}\StringTok{ "Mccormack"} \OperatorTok{&}\StringTok{ }\NormalTok{first_name }\OperatorTok{==}\StringTok{ "Christophe"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(complainant_gender }\OperatorTok{==}\StringTok{ "Male"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(last_name, complainant_ethnicity) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{()}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(n))}
+
+\NormalTok{Mccormack_allegations_NYPD}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 3
+## # Groups:   last_name, complainant_ethnicity [3]
+##   last_name complainant_ethnicity     n
+##   <chr>     <chr>                 <int>
+## 1 Mccormack Black                    25
+## 2 Mccormack Hispanic                 10
+## 3 Mccormack White                     5
+\end{verbatim}
+
+\hypertarget{question-2}{%
+\subsubsection{Question 2}\label{question-2}}
+
+Question 2: Of at least 77 allegations made against him {[}McCormack{]}
+in 26 separate CCRB complaints, 29 were unsubstantiated; five were
+``unfounded,'' meaning investigators concluded the incident never took
+place; and 27 were ``exonerated,'' meaning the conduct fell within
+patrol guidelines.
+
+Answer: 27 exonerated, 29 unsubstantiated, unfounded=unknown, updated
+data does not match this
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Here we are sorting through data to just show the allegation brought against Christopher McCormack. We count a total of 77 allegations made. }
+
+\NormalTok{McCormack_discrete_allegations <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(first_name, last_name, allegation) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(last_name }\OperatorTok{==}\StringTok{ "Mccormack"} \OperatorTok{&}\StringTok{ }\NormalTok{first_name }\OperatorTok{==}\StringTok{ "Christophe"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(last_name, first_name) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{()}
+
+
+\NormalTok{McCormack_discrete_allegations}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+## # Groups:   last_name, first_name [1]
+##   last_name first_name     n
+##   <chr>     <chr>      <int>
+## 1 Mccormack Christophe    72
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#We are sorting through the different types of board investigations and the outcomes of them. We are showing just the outcomes of investigations of board_disposition and showed how many total were made.}
+
+\NormalTok{McCormack_board_disposition <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(last_name, first_name, allegation, board_disposition) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(last_name }\OperatorTok{==}\StringTok{ "Mccormack"} \OperatorTok{&}\StringTok{ }\NormalTok{first_name }\OperatorTok{==}\StringTok{ "Christophe"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(board_disposition) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(board_disposition)}
+
+\NormalTok{McCormack_board_disposition}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 2
+## # Groups:   board_disposition [5]
+##   board_disposition                      n
+##   <chr>                              <int>
+## 1 Exonerated                            27
+## 2 Substantiated (Charges)               13
+## 3 Substantiated (Command Discipline)     2
+## 4 Substantiated (No Recommendations)     1
+## 5 Unsubstantiated                       29
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Here we are looking through the different types of board dispositions. To make it easier we shorten the labels so that only 13 characters show}
+\NormalTok{x <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(last_name }\OperatorTok{==}\StringTok{ "Mccormack"}\OperatorTok{&}\StringTok{ }\NormalTok{first_name }\OperatorTok{==}\StringTok{ "Christophe"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{board_disposition =} \KeywordTok{str_sub}\NormalTok{(board_disposition, }\DataTypeTok{start=}\NormalTok{ 1L, }\DataTypeTok{end=}\NormalTok{13L)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(complaint_id, board_disposition)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pivot_wider}\NormalTok{(}\DataTypeTok{names_from =}\NormalTok{ board_disposition, }\DataTypeTok{values_from =}\NormalTok{ n)}
+ 
+
+\NormalTok{x}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 26 x 4
+## # Groups:   complaint_id [26]
+##    complaint_id Unsubstantiat Exonerated Substantiated
+##           <dbl>         <int>      <int>         <int>
+##  1          973             1         NA            NA
+##  2         2388            NA          1            NA
+##  3         2766            NA          2            NA
+##  4         2886            NA         NA             1
+##  5         3308             2         NA             1
+##  6         3349             1          1            NA
+##  7         5416            NA          2            NA
+##  8         6105            NA         NA            10
+##  9         6120             2          1            NA
+## 10         6147            NA          4            NA
+## # ... with 16 more rows
+\end{verbatim}
+
+\hypertarget{question-3}{%
+\subsubsection{Question 3}\label{question-3}}
+
+Question 3: Eighty-six of the roughly 420 officers in the department who
+currently hold a rank above captain --- running precincts and other
+large commands and overseeing hundreds of officers --- have tallied at
+least one misconduct allegation that was substantiated by the CCRB,
+meaning that investigators amassed enough evidence of offenses, ranging
+from bad language to pistol whippings, to say that they happened and
+broke patrol guidelines. The most common involved improper property
+entries and searches.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Here we created a new string to show the different ranks in the NYPD, and grouped the data by their current ranks.}
+\CommentTok{#The count function tallies the number of officers of each rank and rewriting the string name after displays it below.}
+
+\NormalTok{rank <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(rank_now)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{()}
+\NormalTok{rank}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 8 x 2
+## # Groups:   rank_now [8]
+##   rank_now                   n
+##   <chr>                  <int>
+## 1 Captain                  735
+## 2 Chiefs and other ranks   312
+## 3 Deputy Inspector         435
+## 4 Detective               9917
+## 5 Inspector                214
+## 6 Lieutenant              3696
+## 7 Police Officer         10298
+## 8 Sergeant                7751
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# We are creating a new string for officers in the NYPD above the level of inspector from our original database, and selecting only categories: last_name, first_name, unique_mos_id, rank_now, allegation, and board disposition.}
+
+\CommentTok{# The mutate function is used to change the board_disposition to a sub of the string, only including the first 13 }
+
+\CommentTok{# We then filter by rank, only including those above inspector: Inspector, Deputy Inspector and Chiefs. We also filtered by the board_disposition to only show us substantiated claims, which returns only those claims with officers that were determined to have broken guidelines.}
+
+\CommentTok{# Arranging by unique_mos_id and finding the count separates each individual officer to show 81 officers have at least one substantiated claim against them.}
+
+\NormalTok{Above_inspector_ranking_misconduct <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(last_name, first_name, unique_mos_id, shield_no, rank_now, allegation, board_disposition) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{board_disposition =} \KeywordTok{str_sub}\NormalTok{(board_disposition, }\DataTypeTok{start=}\NormalTok{ 1L, }\DataTypeTok{end=}\NormalTok{13L)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(rank_now }\OperatorTok{==}\StringTok{ "Inspector"}\OperatorTok{|}\StringTok{ }\NormalTok{rank_now }\OperatorTok{==}\StringTok{ "Deputy Inspector"} \OperatorTok{|}\StringTok{ }\NormalTok{rank_now}\OperatorTok{==}\StringTok{"Chiefs and other ranks"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(board_disposition }\OperatorTok{==}\StringTok{ "Substantiated"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(unique_mos_id) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(unique_mos_id)}
+
+
+\NormalTok{Above_inspector_ranking_misconduct }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 81 x 2
+## # Groups:   unique_mos_id [81]
+##    unique_mos_id     n
+##            <dbl> <int>
+##  1          1915     1
+##  2          2099     1
+##  3          3151     1
+##  4          5022     4
+##  5          6196     1
+##  6          6546     1
+##  7          7422     3
+##  8          7869     3
+##  9          8844     2
+## 10         10250     1
+## # ... with 71 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#  The most common involved improper property entries and searches.}
+
+\CommentTok{#  Using the methods above, we then grouped by allegation to determine the number of claims related to improper property entries and searches.}
+
+\CommentTok{#  The mutate function, using the tolower function also, cleans the data in our allegation category, making it easier to further categorize.}
+
+\CommentTok{#  The next mutate function is categorizing the category of the allegations into a few categories: search, force, process, verbal abuse and other.}
+
+\NormalTok{above_captain_cause <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(last_name, first_name, unique_mos_id, shield_no, rank_now, allegation, board_disposition) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{board_disposition =} \KeywordTok{str_sub}\NormalTok{(board_disposition, }\DataTypeTok{start=}\NormalTok{ 1L, }\DataTypeTok{end=}\NormalTok{13L)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(rank_now }\OperatorTok{==}\StringTok{ "Inspector"}\OperatorTok{|}\StringTok{ }\NormalTok{rank_now }\OperatorTok{==}\StringTok{ "Deputy Inspector"} \OperatorTok{|}\StringTok{ }\NormalTok{rank_now}\OperatorTok{==}\StringTok{"Chiefs and other ranks"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(board_disposition }\OperatorTok{==}\StringTok{ "Substantiated"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(allegation) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(n)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{allegation =} \KeywordTok{tolower}\NormalTok{(allegation)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{allegation_category =} \KeywordTok{case_when}\NormalTok{(}
+    \KeywordTok{str_detect}\NormalTok{(allegation, }\StringTok{"search|frisk"}\NormalTok{) }\OperatorTok{~}\StringTok{ "search"}\NormalTok{,}
+    \KeywordTok{str_detect}\NormalTok{(allegation, }\StringTok{"punch|force|push|damaged|dragged|club|beat|pepper"}\NormalTok{) }\OperatorTok{~}\StringTok{ "force"}\NormalTok{,}
+    \KeywordTok{str_detect}\NormalTok{(allegation,}\StringTok{"retaliatory|stop|arrest|refusal|action|detention|property|question"}\NormalTok{) }\OperatorTok{~}\StringTok{ "process"}\NormalTok{,}
+    \KeywordTok{str_detect}\NormalTok{(allegation, }\StringTok{"word|abuse|curse|tone|discourtesy"}\NormalTok{) }\OperatorTok{~}\StringTok{ "verbal abuse"}\NormalTok{,}
+    \OtherTok{TRUE} \OperatorTok{~}\StringTok{ "other"}
+\NormalTok{   )) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{ }\KeywordTok{group_by}\NormalTok{(allegation_category) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total =} \KeywordTok{sum}\NormalTok{(n)) }\OperatorTok{%>%}
+\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(total))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `summarise()` ungrouping output (override with `.groups` argument)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{above_captain_cause}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 2
+##   allegation_category total
+##   <chr>               <int>
+## 1 process                59
+## 2 search                 51
+## 3 force                  39
+## 4 verbal abuse           36
+## 5 other                  12
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# This function shows complaints grouped by allegation rather than allegation_category.}
+
+\NormalTok{above_captain_cause_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(last_name, first_name, unique_mos_id, shield_no, rank_now, allegation, board_disposition) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{board_disposition =} \KeywordTok{str_sub}\NormalTok{(board_disposition, }\DataTypeTok{start=}\NormalTok{ 1L, }\DataTypeTok{end=}\NormalTok{13L)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(rank_now }\OperatorTok{==}\StringTok{ "Inspector"}\OperatorTok{|}\StringTok{ }\NormalTok{rank_now }\OperatorTok{==}\StringTok{ "Deputy Inspector"} \OperatorTok{|}\StringTok{ }\NormalTok{rank_now}\OperatorTok{==}\StringTok{"Chiefs and other ranks"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(board_disposition }\OperatorTok{==}\StringTok{ "Substantiated"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(allegation) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(n)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{allegation =} \KeywordTok{tolower}\NormalTok{(allegation)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{allegation_category =} \KeywordTok{case_when}\NormalTok{(}
+    \KeywordTok{str_detect}\NormalTok{(allegation, }\StringTok{"search|frisk"}\NormalTok{) }\OperatorTok{~}\StringTok{ "search"}\NormalTok{,}
+    \KeywordTok{str_detect}\NormalTok{(allegation, }\StringTok{"punch|force|push|damaged|dragged|club|beat|pepper"}\NormalTok{) }\OperatorTok{~}\StringTok{ "force"}\NormalTok{,}
+    \KeywordTok{str_detect}\NormalTok{(allegation,}\StringTok{"retaliatory|stop|arrest|refusal|action|detention|property|question"}\NormalTok{) }\OperatorTok{~}\StringTok{ "process"}\NormalTok{,}
+    \KeywordTok{str_detect}\NormalTok{(allegation, }\StringTok{"word|abuse|curse|tone|discourtesy"}\NormalTok{) }\OperatorTok{~}\StringTok{ "verbal abuse"}\NormalTok{,}
+    \OtherTok{TRUE} \OperatorTok{~}\StringTok{ "other"}
+\NormalTok{   )) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(allegation) }\OperatorTok{%>%}
+\StringTok{ }\KeywordTok{count}\NormalTok{() }\OperatorTok{%>%}
+\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(n))}
+
+\NormalTok{above_captain_cause_}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 46 x 2
+## # Groups:   allegation [46]
+##    allegation           n
+##    <chr>            <int>
+##  1 property damaged     2
+##  2 threat of arrest     2
+##  3 action               1
+##  4 arrest/d. a. t.      1
+##  5 beat                 1
+##  6 black                1
+##  7 curse                1
+##  8 demeanor/tone        1
+##  9 detention            1
+## 10 dragged/pulled       1
+## # ... with 36 more rows
+\end{verbatim}
+
+\hypertarget{question-4}{%
+\subsubsection{Question 4}\label{question-4}}
+
+Question 4: The story focused on Christopher McCormack. Use data
+analysis to justify that decision. Why does he stand out as newsworthy,
+from all of the people they could have selected?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# When the allegations made by individuals of only a higher rank are examined and labeled by last name and listed from the highest to lowest number of accusations made by people of color (black and hispanic), mcCormack's name comes up second.}
+
+\NormalTok{Total_allegations_NYPD <-}\StringTok{ }\NormalTok{allegations_NYPD }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(last_name, complainant_ethnicity, allegation, rank_now, board_disposition) }\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{filter}\NormalTok{(rank_now }\OperatorTok{==}\StringTok{ "Inspector"}\OperatorTok{|}\StringTok{ }\NormalTok{rank_now }\OperatorTok{==}\StringTok{ "Deputy Inspector"} \OperatorTok{|}\StringTok{ }\NormalTok{rank_now }\OperatorTok{==}\StringTok{"Chiefs and other ranks"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(complainant_ethnicity }\OperatorTok{==}\StringTok{ "Black"}\OperatorTok{|}\NormalTok{complainant_ethnicity}\OperatorTok{==}\StringTok{ "Hispanic"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(last_name) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{()}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(n))}
+
+
+\NormalTok{Total_allegations_NYPD}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 61 x 2
+## # Groups:   last_name [61]
+##    last_name     n
+##    <chr>     <int>
+##  1 Taylor       53
+##  2 Mccormack    49
+##  3 Nunez        35
+##  4 Messina      26
+##  5 Morales      20
+##  6 Festino      18
+##  7 Lynch        16
+##  8 Anderson     15
+##  9 Cortright    15
+## 10 Gibbs        15
+## # ... with 51 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Mccormack has the second highest number of allegations against him by black and hispanic individuals amongst high ranking officers.}
+\end{Highlighting}
+\end{Shaded}
+
+\end{document}
