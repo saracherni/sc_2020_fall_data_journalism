@@ -72,7 +72,10 @@ Each row is a county in Maryland. The columns are as follows:
 **Task (Run Code)**: run the code below to load data.
 
 ```{r}
-maryland <- read_csv("data/maryland_county_monthly_case_rate.csv") 
+maryland <- read_csv("data/maryland_county_monthly_case_rate.csv") %>%
+  mutate(month = as_factor(month)) %>%
+  mutate(month = ordered(month, levels =
+      c("March" , "April" , "May", "June" , "July" , "August")))
 ```
 
 ## Examine data
@@ -246,13 +249,16 @@ Create a code block below, and create a bar chart showing the increase in case r
 **Task (Create a Codeblock, Write and Run Code):** Create the chart below. 
 
 ```{r}
-Baltimore_city <- maryland  %>%
-  filter(county == "Baltimore City")
+baltimore_city<-maryland  %>%
+ filter(county == "Baltimore city", month %in% c("May", "June", "July", "August"))
+
+baltimore_city
+
 
 ```
-###Can't figure out why no data shows up! I filter correctly 
+
 ```{r}
-Baltimore_city  %>%
+baltimore_city  %>%
   ggplot(aes(month, case_rate)) +
   geom_bar(stat="identity", fill="steelblue") +
   labs(
@@ -263,7 +269,7 @@ Baltimore_city  %>%
   ) +
   geom_text(aes(label=round(case_rate,0)))
 
-Baltimore_city
+baltimore_city
 
 ```
 
