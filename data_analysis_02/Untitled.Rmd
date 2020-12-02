@@ -19,8 +19,9 @@ library(readxl)
 ```
 
 ## Load data
-
 ```{r}
+#loading schools race data
+# data dictionary for schools race schools_dictionary <-read_xlsx("data/2015-16_CCD_Companion_School_Membership_layout.xlsx")
 schools_race <- read_csv("data/ccd_sch_052_1516_w_2a_011717.csv") %>%
     clean_names() %>%
     select(stabr, statename, lea_name, sch_name, total, am, as, hi, hp, bl, wh, tr) %>%
@@ -28,35 +29,34 @@ schools_race <- read_csv("data/ccd_sch_052_1516_w_2a_011717.csv") %>%
            total_check= total-computed_total) %>%
     filter(total_check == 0) %>%
     mutate(pct_black= round(bl/total*100,1))
+
+#loading heritage data
+heritage_schools <- read_csv("data/whose_heritage.csv") %>%
+  clean_names() %>%
+  filter(symbol_type == "School") %>%
+  rename(sch_name = feature_name) %>%
+  rename(stabr = state) 
+
+#loading the crosswalk
+crosswalk <- read_csv("data/schools_confederate_cross_walk.csv")
+
+#Joining heritage schools to crosswalk
+heritage_schools_crosswalk <- heritage_schools %>%
+  inner_join(crosswalk, by = c("unique_id", "sch_name", "honorees"))
 ```
 
-
-```{r}
-schools_dictionary <-read_xlsx("data/2015-16_CCD_Companion_School_Membership_layout.xlsx")
-
-```
 
 ###Notes: <a href= "https://www.edweek.org/ew/section/multimedia/data-the-schools-named-after-confederate-figures.html"> Schools named after confederate leaders</a> What is the racial makeup of these schools?  Colleges named after confederate leaders?  And racial makeup of those colleges?  What is the racial makeup of the counties or census tracts where these statues are located? 
-```{r}
-heritage <- read_csv("data/whose_heritage.csv") %>%
+Are schools named after confederate leaders over representative of African American populations?
 
-clean_names()
 
-heritage
-```
+
 ```{r}
 heritage_schools <- heritage %>%
   filter(symbol_type == "School") %>%
   rename(sch_name = feature_name) %>%
   rename(stabr = state) %>%
-  mutate(sch_name = case_when(
-    
-    sch_name=="B. F. Terry High School"~"B F TERRY H S" ,
-    sch_name=="Robert E. Lee High School"~"LEE H S" ,
-    TRUE~sch_name
 
-  ))
-  
 	
 
 
@@ -69,7 +69,15 @@ join <- heritage_schools %>%
   inner_join(schools_race, by = c("sch_name" , "stabr"))
 
 ```
+```{r}
+
+
+
+```
+
 ## Exploratory Analysis
+
+
 
 ```{r}
 heritage %>%
