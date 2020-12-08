@@ -22,27 +22,48 @@ library(readxl)
 ```{r}
 #loading schools race data
 # data dictionary for schools race schools_dictionary <-read_xlsx("data/2015-16_CCD_Companion_School_Membership_layout.xlsx")
-schools_race <- read_csv("data/ccd_sch_052_1516_w_2a_011717.csv") %>%
+schools_race <- read_csv("data/nces_data.csv") %>%
     clean_names() %>%
     select(stabr, statename, lea_name, sch_name, total, am, as, hi, hp, bl, wh, tr) %>%
     mutate(computed_total = am+as+hi+hp+bl+wh+tr,
            total_check= total-computed_total) %>%
     filter(total_check == 0) %>%
     mutate(pct_black= round(bl/total*100,1))
-
 #loading heritage data
 heritage_schools <- read_csv("data/whose_heritage.csv") %>%
   clean_names() %>%
   filter(symbol_type == "School") %>%
   rename(sch_name = feature_name) %>%
-  rename(stabr = state) 
-
+  rename(stabr = state) %>% 
+  mutate(unique_id_honorees = paste0(unique_id, " ", honorees)) %>%
+  filter(unique_id_honorees != "5018 Jefferson Davis") %>%
+  filter(unique_id_honorees != "1478 Jefferson Davis")
 #loading the crosswalk
-crosswalk <- read_csv("data/schools_confederate_cross_walk.csv")
-
+crosswalk <- read_csv("data/schools_confederate_cross_walk.csv") %>%
+  mutate(unique_id_honorees = paste0(unique_id, " ", honorees)) %>%
+  filter(unique_id_honorees != "5018 Jefferson Davis") %>%
+  filter(unique_id_honorees != "1478 Jefferson Davis")
+  
 #Joining heritage schools to crosswalk
 heritage_schools_crosswalk <- heritage_schools %>%
-  inner_join(crosswalk, by = c("unique_id", "sch_name", "honorees"))
+  inner_join(crosswalk, by = c("unique_id")) %>%
+  rename(stabr = stabr.y, sch_name = sch_name.y)
+#Joining to schools_race
+heritage_schools_race <- heritage_schools_crosswalk %>%
+  left_join(schools_race) %>%
+  filter(!is.na(bl)) %>%
+  select(unique_id, heritage_sch_name = sch_name.x, heritage_honorees = honorees.x, heritage_city = city.x, heritage_county = county.x, heritage_stabr = stabr.x, side:removed_after_charlottesville, lea_name, sch_name, total:pct_black) %>%
+  filter(tracking_status %in% c("Pending", "Live"))
+glimpse(heritage_schools_race)
+```
+###Note: Below is Sidney Lanier High School in Montgomery, Alabama. The school is named after confederate Sidney Lanier and the school's population is more than 99% Black.
+```{r}
+filter_heritage_schools_race <- heritage_schools_crosswalk %>%
+  select(sch_name, statename, pct_blk, total, bl, wh, tr, hi, hp, as, am) %>%
+  filter(heritage_sch_name ="Lanier Senior High Sch")
+  
+
+
 ```
 
 
