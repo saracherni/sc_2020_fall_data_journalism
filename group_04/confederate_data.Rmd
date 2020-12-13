@@ -28,6 +28,7 @@ schools_race <- read_csv("data/nces_data.csv") %>%
            total_check= total-computed_total) %>%
     filter(total_check == 0) %>%
     mutate(pct_black= round(bl/total*100,1))
+
 #loading heritage data
 heritage_schools <- read_csv("data/whose_heritage.csv") %>%
   clean_names() %>%
@@ -59,6 +60,7 @@ heritage_schools_race <- heritage_schools_crosswalk %>%
 glimpse(heritage_schools_race)
 
 ```
+
 ```{r}
 #Below is Sidney Lanier High School in Montgomery, Alabama. The school is named after confederate Sidney Lanier and the school's population is more than 99% Black.
 
@@ -71,7 +73,7 @@ sidney_lanier
 ```
 
 ```{r}
-#Three schools in Montgomery, Alabama have a rename pending status. There are four schools total with a rename pending status, the last one is located in Texas. Three of the schools were dedicated during the the civil rights era.
+#Three schools in Montgomery, Alabama have a rename pending status. There are four schools total with a rename pending status, the last one is located in Texas. Three of the schools with this status were dedicated during the the civil rights era.
 rename_pending <- heritage_schools_race %>%
   select(heritage_stabr, heritage_sch_name, heritage_county, heritage_stabr, year_dedicated, pct_black) %>%
   filter(str_detect(heritage_sch_name, "pending")) 
@@ -127,7 +129,7 @@ confederate_named_schools
 ```
 
 ```{r} 
-#22 schools have majority Black population (over 50%)
+#22 schools named after a confederate have a majority Black population (over 50%)
 schoolblackcount <- heritage_schools_race %>%
   select(heritage_city, heritage_sch_name, heritage_city, heritage_stabr, pct_black) %>%
   filter (pct_black >= 50) %>%
@@ -138,7 +140,7 @@ schoolblackcount
 ```
 
 ```{r}
-#10 schools have over a 90% Black student body
+#10 schools named after a confederate have over a 90% Black student body
 ninety_pct_black <- heritage_schools_race %>%
   select(heritage_stabr, lea_name, sch_name, pct_black) %>%
 	arrange(desc(pct_black)) %>%
