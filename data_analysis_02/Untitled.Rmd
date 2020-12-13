@@ -22,7 +22,7 @@ library(readxl)
 ```{r}
 #loading schools race data
 # data dictionary for schools race schools_dictionary <-read_xlsx("data/2015-16_CCD_Companion_School_Membership_layout.xlsx")
-schools_race <- read_csv("data/nces_data.csv") %>%
+schools_race <- read_csv("data/ccd_sch_052_1516_w_2a_011717 2.csv") %>%
     clean_names() %>%
     select(stabr, statename, lea_name, sch_name, total, am, as, hi, hp, bl, wh, tr) %>%
     mutate(computed_total = am+as+hi+hp+bl+wh+tr,
@@ -58,13 +58,28 @@ glimpse(heritage_schools_race)
 ```
 ###Note: Below is Sidney Lanier High School in Montgomery, Alabama. The school is named after confederate Sidney Lanier and the school's population is more than 99% Black.
 ```{r}
-filter_heritage_schools_race <- heritage_schools_crosswalk %>%
-  select(sch_name, statename, pct_blk, total, bl, wh, tr, hi, hp, as, am) %>%
-  filter(heritage_sch_name ="Lanier Senior High Sch")
+
+ninety_pct_black <- heritage_schools_crosswalk %>%
+  select(heritage_stabr, lea_name, sch_name, pct_black) %>%
+  filter(pct_black >= 90) %>%
+  arrange(desc(pct_black))
   
+ 
+ninety_pct_black
+
 
 
 ```
+
+###Three schools in montogmery county, AL  have rename pending status.There are four schools total with rename pending status, last one in texas and texas has 32 schools named after confederates 
+
+###from these two data sets there at 94 schools named after confederate leaders 
+
+###22 schools have majority black population (over 50%)
+
+###22 schools have populations of more than 50 percent Black and 10 schools are in areas that are more than 90% black
+
+
 
 
 ###Notes: <a href= "https://www.edweek.org/ew/section/multimedia/data-the-schools-named-after-confederate-figures.html"> Schools named after confederate leaders</a> What is the racial makeup of these schools?  Colleges named after confederate leaders?  And racial makeup of those colleges?  What is the racial makeup of the counties or census tracts where these statues are located? 

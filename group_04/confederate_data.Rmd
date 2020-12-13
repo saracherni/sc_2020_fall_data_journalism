@@ -1,0 +1,150 @@
+---
+title: "Data_analysis_2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+## Load Libraries
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(readxl)
+```
+
+## Load data
+```{r}
+#loading schools race data
+# data dictionary for schools race schools_dictionary <-read_xlsx("data/2015-16_CCD_Companion_School_Membership_layout.xlsx")
+schools_race <- read_csv("data/nces_data.csv") %>%
+    clean_names() %>%
+    select(stabr, statename, lea_name, sch_name, total, am, as, hi, hp, bl, wh, tr) %>%
+    mutate(computed_total = am+as+hi+hp+bl+wh+tr,
+           total_check= total-computed_total) %>%
+    filter(total_check == 0) %>%
+    mutate(pct_black= round(bl/total*100,1))
+#loading heritage data
+heritage_schools <- read_csv("data/whose_heritage.csv") %>%
+  clean_names() %>%
+  filter(symbol_type == "School") %>%
+  rename(sch_name = feature_name) %>%
+  rename(stabr = state) %>% 
+  mutate(unique_id_honorees = paste0(unique_id, " ", honorees)) %>%
+  filter(unique_id_honorees != "5018 Jefferson Davis") %>%
+  filter(unique_id_honorees != "1478 Jefferson Davis")
+
+#loading the crosswalk
+crosswalk <- read_csv("data/schools_confederate_cross_walk.csv") %>%
+  mutate(unique_id_honorees = paste0(unique_id, " ", honorees)) %>%
+  filter(unique_id_honorees != "5018 Jefferson Davis") %>%
+  filter(unique_id_honorees != "1478 Jefferson Davis")
+  
+#Joining heritage schools to crosswalk
+heritage_schools_crosswalk <- heritage_schools %>%
+  inner_join(crosswalk, by = c("unique_id")) %>%
+  rename(stabr = stabr.y, sch_name = sch_name.y)
+
+#Joining to schools_race
+heritage_schools_race <- heritage_schools_crosswalk %>%
+  left_join(schools_race) %>%
+  filter(!is.na(bl)) %>%
+  select(unique_id, heritage_sch_name = sch_name.x, heritage_honorees = honorees.x, heritage_city = city.x, heritage_county = county.x, heritage_stabr = stabr.x, side:removed_after_charlottesville, lea_name, sch_name, total:pct_black) %>%
+  filter(tracking_status %in% c("Pending", "Live"))
+
+glimpse(heritage_schools_race)
+
+```
+```{r}
+#Below is Sidney Lanier High School in Montgomery, Alabama. The school is named after confederate Sidney Lanier and the school's population is more than 99% Black.
+
+sidney_lanier <- heritage_schools_race %>%
+  arrange(desc(pct_black))%>%
+  select(heritage_sch_name, pct_black, year_dedicated) %>%
+  filter(heritage_sch_name == "Sidney Lanier High School (rename pending)")
+
+sidney_lanier
+```
+
+```{r}
+#Three schools in Montgomery, Alabama have a rename pending status. There are four schools total with a rename pending status, the last one is located in Texas. Three of the schools were dedicated during the the civil rights era.
+rename_pending <- heritage_schools_race %>%
+  select(heritage_stabr, heritage_sch_name, heritage_county, heritage_stabr, year_dedicated, pct_black) %>%
+  filter(str_detect(heritage_sch_name, "pending")) 
+
+
+rename_pending
+
+state_rename_pending <- heritage_schools_race %>%
+  select(heritage_stabr, heritage_sch_name, pct_black) %>%
+  filter(str_detect(heritage_sch_name, "pending")) %>%
+  group_by(heritage_stabr) %>%
+  count() %>%
+  rename(sch_pending_rename_by_state = heritage_stabr)
+
+
+state_rename_pending
+```
+
+
+```{r}
+#Texas has 32 schools named after confederates, the largest number compared to all states. 4.26% of schools named after confederates are undergoing a name change. 
+sch_by_state <- heritage_schools_race %>%
+  group_by(heritage_stabr) %>%
+  count() %>%
+  arrange(desc(n))
+
+
+sch_by_state
+
+
+pct_rename <- heritage_schools_race %>%
+  select(heritage_stabr, heritage_sch_name, pct_black) %>%
+  filter(str_detect(heritage_sch_name, "pending")) %>%
+  count() %>%
+  mutate(total_sch = nrow(heritage_schools_race),
+         pct_sch_renaming = round(n/nrow(heritage_schools_race)*100, 2))
+
+pct_rename
+
+```
+
+```{r} 
+#There are a total of  94 schools named after confederate leaders from these two joined data sets
+
+confederate_named_schools <-heritage_schools_race %>%
+  select(heritage_city, heritage_sch_name, heritage_city, heritage_stabr) %>%
+  count() %>%
+  arrange(n)
+
+confederate_named_schools
+
+
+```
+
+```{r} 
+#22 schools have majority Black population (over 50%)
+schoolblackcount <- heritage_schools_race %>%
+  select(heritage_city, heritage_sch_name, heritage_city, heritage_stabr, pct_black) %>%
+  filter (pct_black >= 50) %>%
+  count() %>%
+  arrange(desc(n))
+
+schoolblackcount
+```
+
+```{r}
+#10 schools have over a 90% Black student body
+ninety_pct_black <- heritage_schools_race %>%
+  select(heritage_stabr, lea_name, sch_name, pct_black) %>%
+	arrange(desc(pct_black)) %>%
+	filter(pct_black >=90)
+
+ninety_pct_black
+
+```
+
