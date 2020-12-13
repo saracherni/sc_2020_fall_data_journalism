@@ -64,9 +64,13 @@ glimpse(heritage_schools_race)
 ```{r}
 #Below is Sidney Lanier High School in Montgomery, Alabama. The school is named after confederate Sidney Lanier and the school's population is more than 99% Black.
 
+#create a data frame for percentage of black population in schools
 sidney_lanier <- heritage_schools_race %>%
+  #display data in descending order 
   arrange(desc(pct_black))%>%
+  #included school name column, percentage of black students, and the year the school was named
   select(heritage_sch_name, pct_black, year_dedicated) %>%
+  #filter the data to show the schools that have pending name changes 
   filter(heritage_sch_name == "Sidney Lanier High School (rename pending)")
 
 sidney_lanier
@@ -74,55 +78,79 @@ sidney_lanier
 
 ```{r}
 #Three schools in Montgomery, Alabama have a rename pending status. There are four schools total with a rename pending status, the last one is located in Texas. Three of the schools with this status were dedicated during the the civil rights era.
+#First, create new data set called rename_pending 
 rename_pending <- heritage_schools_race %>%
+  #Then select the following rows, which will narrow the data we're looking at
   select(heritage_stabr, heritage_sch_name, heritage_county, heritage_stabr, year_dedicated, pct_black) %>%
+  #Lastly, filter for schools that contain "rename pending" in their code block
   filter(str_detect(heritage_sch_name, "pending")) 
 
-
+#Display rename_pending
 rename_pending
 
+#First, create new data set called state_rename_pending 
 state_rename_pending <- heritage_schools_race %>%
+  #Then select the following rows, which will narrow the data we're looking at
   select(heritage_stabr, heritage_sch_name, pct_black) %>%
+  #Filter for schools that contain "rename pending" in their code block
   filter(str_detect(heritage_sch_name, "pending")) %>%
+  #Using the group_by function, isolate the column indicating state, heritage_stabr
   group_by(heritage_stabr) %>%
+  #Using the count() function, find how many schools have renames pending in each state
   count() %>%
+  #Rename the column sch_pending_rename_by_state
   rename(sch_pending_rename_by_state = heritage_stabr)
 
-
+#Display state_rename_pending
 state_rename_pending
 ```
 
 
 ```{r}
 #Texas has 32 schools named after confederates, the largest number compared to all states. 4.26% of schools named after confederates are undergoing a name change. 
+
+#First, create new data set called sch_by_state 
 sch_by_state <- heritage_schools_race %>%
+  #Using the group_by function, isolate the column indicating state, heritage_stabr
   group_by(heritage_stabr) %>%
+  #Using the count() function, find how many schools dedicated to confederate leaders are in each state
   count() %>%
+  #Arrange the schools from greatest to least, or in descending order
   arrange(desc(n))
 
-
+#Display sch_by_state
 sch_by_state
 
 
+
+#First, create new data set called pct_rename
 pct_rename <- heritage_schools_race %>%
+    #Then select the following rows, which will narrow the data we're looking at
   select(heritage_stabr, heritage_sch_name, pct_black) %>%
+    #Filter for schools that contain "rename pending" in their code block
   filter(str_detect(heritage_sch_name, "pending")) %>%
+    #Using the count() function, find how many schools have renames pending in each state
   count() %>%
+  #Using the mutate function, find the proportion of total schools dedicated to confederate leaders are in the renaming process
   mutate(total_sch = nrow(heritage_schools_race),
          pct_sch_renaming = round(n/nrow(heritage_schools_race)*100, 2))
 
+#Display pct_rename
 pct_rename
 
 ```
 
 ```{r} 
 #There are a total of  94 schools named after confederate leaders from these two joined data sets
-
+#First, create new data set called confederate_named_schools
 confederate_named_schools <-heritage_schools_race %>%
+  #Then select the following rows, which will narrow the data we're looking at
   select(heritage_city, heritage_sch_name, heritage_city, heritage_stabr) %>%
+  #Using the count() function, find the total number of schools named after confederate leaders
   count() %>%
+  #display the number below
   arrange(n)
-
+#display confederate_named_schools
 confederate_named_schools
 
 
@@ -131,10 +159,12 @@ confederate_named_schools
 ```{r} 
 #22 schools named after a confederate have a majority Black population (over 50%)
 schoolblackcount <- heritage_schools_race %>%
-  select(heritage_city, heritage_sch_name, heritage_city, heritage_stabr, pct_black) %>%
+  #only display, state name, school name, city and percentage of black students
+  select(heritage_city, heritage_sch_name, heritage_stabr, pct_black) %>%
+  #filter to only show schools with a percentage of Black students between 50-100
   filter (pct_black >= 50) %>%
-  count() %>%
-  arrange(desc(n))
+  #display data by schools with highest to lowest percent of black students
+  arrange(desc(pct_black))
 
 schoolblackcount
 ```
@@ -142,8 +172,11 @@ schoolblackcount
 ```{r}
 #10 schools named after a confederate have over a 90% Black student body
 ninety_pct_black <- heritage_schools_race %>%
+  #only display, state name, school name and percentage of black students
   select(heritage_stabr, lea_name, sch_name, pct_black) %>%
+  #display data by highest to lowest percent of black students
 	arrange(desc(pct_black)) %>%
+  #filter to only show schools with a percentage of Black students between 90-100
 	filter(pct_black >=90)
 
 ninety_pct_black
